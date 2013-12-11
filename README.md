@@ -1,6 +1,8 @@
 # Vagrant::NfsGuest
 
-TODO: Write a gem description
+Allows a guest VM to export synced folders via NFS and the host to mount them.
+
+Basically it's just the usual NFS synced folders in Vagrant but the roles are reversed.
 
 ## Installation
 
@@ -18,7 +20,9 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+To enable for example:
+
+```config.vm.synced_folder 'srv', '/srv', type: 'nfs_guest'```
 
 ## Contributing
 
