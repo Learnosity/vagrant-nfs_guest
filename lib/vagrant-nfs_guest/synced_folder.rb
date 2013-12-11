@@ -34,9 +34,10 @@ module VagrantPlugins
         machine.guest.capability(
           :export_nfs_folders, nfsopts[:nfs_guest_host_ip], mount_folders)
 
-        machine.ui.info "Woo I'm syncing!"
-        machine.ui.info nfsopts
-        machine.ui.info folders
+        machine.ui.info I18n.t("vagrant.actions.vm.nfs.mounting")
+
+        machine.env.host.mount_nfs_folders(
+          machine.id, machine_ip, mount_folders)
       end
 
       protected

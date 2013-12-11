@@ -1,3 +1,6 @@
+require File.expand_path("../hosts/host", __FILE__)
+require File.expand_path("../hosts/bsd/host", __FILE__)
+
 module VagrantPlugins
   module SyncedFolderNFSGuest
     class Plugin < Vagrant.plugin("2")
