@@ -1,4 +1,4 @@
-# Vagrant::NfsGuest
+# Vagrant-NFS_Guest
 
 Allows a guest VM to export synced folders via NFS and the host to mount them.
 
