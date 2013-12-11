@@ -39,10 +39,21 @@ module VagrantPlugins
         Cap::Linux::ReadUserIDs
       end
 
+      guest_capability(:linux, :halt) do
+        require File.expand_path("../cap/linux/halt", __FILE__)
+        Cap::Linux::Halt
+      end
+
       require File.expand_path("../action/prepare_nfs_guest_settings", __FILE__)
       action_hook(:nfs_guest, :machine_action_up) do |hook|
         hook.before(VagrantPlugins::ProviderVirtualBox::Action::PrepareNFSSettings,
                    Action::PrepareNFSGuestSettings)
+      end
+
+      require File.expand_path("../action/unmount_mounts", __FILE__)
+      action_hook(:nfs_guest, :machine_action_destroy) do |hook|
+        hook.before(VagrantPlugins::ProviderVirtualBox::Action::ForcedHalt,
+                   Action::UnmountMounts)
       end
     end
   end
