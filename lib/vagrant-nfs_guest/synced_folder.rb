@@ -15,7 +15,10 @@ module VagrantPlugins
       def enable(machine, folders, nfsopts)
         raise Vagrant::Errors::NFSNoHostIP if !nfsopts[:nfs_guest_host_ip]
         raise Vagrant::Errors::NFSNoGuestIP if !nfsopts[:nfs_guest_machine_ip]
-        raise Vagrant::Errors::NFSNoServer if !machine.guest.capability(:export_nfs_capable)
+
+        if !machine.guest.capability(:export_nfs_capable)
+          raise VagrantPlugins::SyncedFolderNFSGuest::Error, :no_nfsd
+        end
         
         machine_ip = nfsopts[:nfs_guest_machine_ip]
         machine_ip = [machine_ip] if !machine_ip.is_a?(Array)
