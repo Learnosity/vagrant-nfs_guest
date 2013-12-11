@@ -52,7 +52,7 @@ module VagrantPlugins
 
       require File.expand_path("../action/unmount_mounts", __FILE__)
       action_hook(:nfs_guest, :machine_action_destroy) do |hook|
-        hook.before(VagrantPlugins::ProviderVirtualBox::Action::ForcedHalt,
+        hook.after(Vagrant::Action::Builtin::DestroyConfirm,
                    Action::UnmountMounts)
       end
     end
