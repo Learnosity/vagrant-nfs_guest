@@ -15,7 +15,7 @@ module VagrantPlugins
       def enable(machine, folders, nfsopts)
         raise Vagrant::Errors::NFSNoHostIP if !nfsopts[:nfs_guest_host_ip]
         raise Vagrant::Errors::NFSNoGuestIP if !nfsopts[:nfs_guest_machine_ip]
-        #raise Vagrant::Errors::NFSNoServer if !machine.guest.capability(:export_nfs_capable)
+        raise Vagrant::Errors::NFSNoServer if !machine.guest.capability(:export_nfs_capable)
         
         machine_ip = nfsopts[:nfs_guest_machine_ip]
         machine_ip = [machine_ip] if !machine_ip.is_a?(Array)
@@ -64,8 +64,7 @@ module VagrantPlugins
 
         # Get UID/GID from guests user if we've made it this far
         # (value == :auto)
-        # TODO
-        #return machine.guest.capability("read_#{perm}".to_sym)
+        return machine.guest.capability("read_#{perm}".to_sym)
       end
     end
   end
