@@ -4,8 +4,8 @@ module VagrantPlugins
       def mount_nfs_folders(id, ips, folders)
         folders.each do |name, opts|
           ips.each do |ip|
-            system("if [ ! -d #{opts[:hostpath]} ]; then  mkdir -p #{opts[:hostpath]};fi")
-            mount_command = "mount -t nfs '#{ip}:#{opts[:guestpath]}' '#{opts[:hostpath]}'"
+            system("mkdir -p #{opts[:hostpath]}")
+            mount_command = "mount -t nfs -o noatime '#{ip}:#{opts[:guestpath]}' '#{opts[:hostpath]}'"
             if system(mount_command)
               break
             end
