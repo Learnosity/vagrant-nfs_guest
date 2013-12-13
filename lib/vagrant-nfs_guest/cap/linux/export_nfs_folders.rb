@@ -83,8 +83,9 @@ module VagrantPlugins
 
               # Do the actual creating and mounting
               @machine.communicate.sudo("mkdir -p #{expanded_guest_path}")
-              @machine.communicate.sudo("chgrp -R vagrant #{expanded_guest_path}")
-              @machine.communicate.sudo("chmod g+rw #{expanded_guest_path}")
+              @machine.communicate.sudo("chown -R vagrant:vagrant #{expanded_guest_path}")
+              @machine.communicate.sudo("chmod u+rw #{expanded_guest_path}")
+              @machine.communicate.sudo("chmod g+rws #{expanded_guest_path}")
             end
           end
 
