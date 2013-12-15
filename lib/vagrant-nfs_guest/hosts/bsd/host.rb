@@ -20,7 +20,10 @@ module VagrantPlugins
         folders.each do |name, opts|
           if opts[:type] == :nfs_guest
             expanded_host_path = `printf #{opts[:hostpath]}`
-            system("umount '#{expanded_host_path}'")
+            if not system("umount '#{expanded_host_path}'")
+              @ui.info "NFS mounts still in use!"
+              exit(1)
+            end
           end
         end
       end
