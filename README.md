@@ -21,9 +21,9 @@ Basically it's just the usual NFS synced folders in Vagrant but the roles are re
 
 ## Usage
 
-To enable for example:
+To enable for example put similar in the Vagrantfile:
 
-```config.vm.synced_folder 'srv', '/srv', type: 'nfs_guest'```
+    config.vm.synced_folder 'srv', '/srv', type: 'nfs_guest'
 
 ## Building
 
