@@ -3,7 +3,7 @@
 ## What's New?
 
 - Supports Vagrant 1.6!
-- Handles actions 'up', 'halt', 'destroy', 'suspend', 'resume' and 'package' properly
+- Handles actions ```up```, ```halt```, ```destroy```, ```suspend```, ```resume``` and ```package``` properly
 - Uses retryable() for host to guest communications allow more fault tolerance
 - Better error messages and handling
 - Re-organisation of modules and class to better match Vagrant proper
