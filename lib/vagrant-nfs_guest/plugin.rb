@@ -1,59 +1,93 @@
-require File.expand_path("../hosts/host", __FILE__)
-require File.expand_path("../hosts/bsd/host", __FILE__)
+begin
+  require "vagrant"
+rescue LoadError
+  raise "The Vagrant AWS plugin must be run within Vagrant."
+end
+
+# This is a sanity check to make sure no one is attempting to install
+# this into an early Vagrant version.
+if Vagrant::VERSION < "1.2.0"
+  raise "The Vagrant AWS plugin is only compatible with Vagrant 1.2+"
+end
 
 module VagrantPlugins
   module SyncedFolderNFSGuest
+    # This plugin implements Guest Exported NFS folders.
+    #
     class Plugin < Vagrant.plugin("2")
       name "vagrant-nfs_guest"
       description <<-DESC
-      Adds support for guest nfs exporting of synced folders
+      The NFS Guest synced folders plugin enables you to use NFS exports from
+      the Guest as a synced folder implementation.
       DESC
 
       config(:nfs_guest) do
-        require File.expand_path("../config", __FILE__)
+        require_relative "config"
         Config
       end
 
       synced_folder(:nfs_guest, 4) do
-        require File.expand_path("../synced_folder", __FILE__)
+        require_relative "synced_folder"
         SyncedFolder
       end
 
-      guest_capability(:linux, :export_nfs_folders) do
-        require File.expand_path("../cap/linux/export_nfs_folders", __FILE__)
-        Cap::Linux::ExportNFS
+      guest_capability(:linux, :nfs_export) do
+        require_relative "guests/linux/cap/nfs_export"
+        GuestLinux::Cap::NFSExport
       end
 
-      guest_capability(:linux, :export_nfs_capable) do
-        require File.expand_path("../cap/linux/export_nfs_folders", __FILE__)
-        Cap::Linux::ExportNFS
+      guest_capability(:linux, :nfs_apply_command) do
+        require_relative "guests/linux/cap/nfs_export"
+        GuestLinux::Cap::NFSExport
+      end
+
+      guest_capability(:linux, :nfs_check_command) do
+        require_relative "guests/linux/cap/nfs_export"
+        GuestLinux::Cap::NFSExport
+      end
+
+      guest_capability(:linux, :nfs_start_command) do
+        require_relative "guests/linux/cap/nfs_export"
+        GuestLinux::Cap::NFSExport
+      end
+
+      guest_capability(:linux, :nfs_exports_template) do
+        require_relative "guests/linux/cap/nfs_export"
+        GuestLinux::Cap::NFSExport
       end
 
       guest_capability(:linux, :read_uid) do
-        require File.expand_path("../cap/linux/read_user_ids", __FILE__)
-        Cap::Linux::ReadUserIDs
+        require_relative "guests/linux/cap/read_user_ids"
+        GuestLinux::Cap::ReadUserIDs
       end
 
       guest_capability(:linux, :read_gid) do
-        require File.expand_path("../cap/linux/read_user_ids", __FILE__)
-        Cap::Linux::ReadUserIDs
+        require_relative "guests/linux/cap/read_user_ids"
+        GuestLinux::Cap::ReadUserIDs
       end
 
-      guest_capability(:linux, :halt) do
-        require File.expand_path("../cap/linux/halt", __FILE__)
-        Cap::Linux::Halt
-      end
-
-      require File.expand_path("../action/prepare_nfs_guest_settings", __FILE__)
       action_hook(:nfs_guest, :machine_action_up) do |hook|
-        hook.before(VagrantPlugins::ProviderVirtualBox::Action::PrepareNFSSettings,
-                   Action::PrepareNFSGuestSettings)
+        require_relative "action/prepare_nfs_guest_settings"
+        hook.before(
+          VagrantPlugins::ProviderVirtualBox::Action::PrepareNFSSettings,
+          Action::PrepareNFSGuestSettings
+        )
       end
 
-      require File.expand_path("../action/unmount_mounts", __FILE__)
+      action_hook(:nfs_guest, :machine_action_halt) do |hook|
+        require_relative "action/unmount_nfs"
+        hook.before(
+          Vagrant::Action::Builtin::GracefulHalt,
+          Action::UnmountNFS
+        )
+      end
+
       action_hook(:nfs_guest, :machine_action_destroy) do |hook|
-        hook.after(Vagrant::Action::Builtin::DestroyConfirm,
-                   Action::UnmountMounts)
+        require_relative "action/unmount_nfs"
+        hook.after(
+          Vagrant::Action::Builtin::DestroyConfirm,
+          Action::UnmountNFS
+        )
       end
     end
   end

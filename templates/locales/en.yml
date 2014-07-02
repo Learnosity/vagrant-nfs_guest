@@ -1,0 +1,43 @@
+en:
+  vagrant_nfs_guest:
+    actions:
+      vm:
+        nfs:
+          exporting: "Exporting NFS shared folders from guest..."
+          mounting: "Mounting NFS shared folders from guest..."
+          unmounting: "Unmounting NFS shared folders from guest..."
+    guests:
+      linux:
+        nfs_export: "Preparing to edit /etc/exports on the guest..."
+
+    errors:
+      nfs_update_exports_failed: |-
+        There was an error updating the guests /etc/exports file.
+
+        %{command}
+
+        Stdout from the command:
+        %{stdout}
+
+        Stderr from the command:
+        %{stderr}
+      nfs_start_failed: |-
+        Something failed while starting the NFS service on the guest.
+
+        %{command}
+
+        Stdout from the command:
+        %{stdout}
+
+        Stderr from the command:
+        %{stderr}
+      nfs_apply_failed: |-
+        Something failed while applying changes to the NFS service on the guest.
+
+        %{command}
+
+        Stdout from the command:
+        %{stdout}
+
+        Stderr from the command:
+        %{stderr}

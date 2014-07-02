@@ -1,27 +1,21 @@
-begin
-    require "vagrant"
-rescue LoadError
-    raise "The Vagrant nfs_guest plugin must be run within Vagrant."
-end
-
-# This is a sanity check to make sure no one is attempting to install
-# this into an early Vagrant version.
-if Vagrant::VERSION < "1.4.0"
-    raise "The Vagrant nfs_guest plugin is only compatible with Vagrant 1.4+"
-end
+require "pathname"
 
 require "vagrant-nfs_guest/plugin"
-require 'vagrant-nfs_guest/errors'
-
-require "pathname"
+require "vagrant-nfs_guest/hosts/bsd/plugin"
 
 module VagrantPlugins
   module SyncedFolderNFSGuest
+    lib_path = Pathname.new(File.expand_path("../vagrant-nfs_guest", __FILE__))
+    autoload :Errors, lib_path.join("errors")
+
+    # This returns the path to the source of this plugin.
+    #
+    # @return [Pathname]
     def self.source_root
       @source_root ||= Pathname.new(File.expand_path("../../", __FILE__))
     end
 
-    I18n.load_path << File.expand_path('locales/en.yml', source_root)
+    I18n.load_path << File.expand_path("templates/locales/en.yml", source_root)
     I18n.reload!
   end
 end

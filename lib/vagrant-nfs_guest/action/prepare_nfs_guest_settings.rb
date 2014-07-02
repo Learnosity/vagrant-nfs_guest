@@ -10,16 +10,17 @@ module VagrantPlugins
 
         def initialize(app,env)
           @app = app
-          @logger = Log4r::Logger.new("vagrant::action::vm::nfs_guest")
+          @logger = Log4r::Logger.new("vagrant-nfs_guest::action::prepare_nfs_guest_settings")
         end
 
         def call(env)
           @machine = env[:machine]
+
           @app.call(env)
 
           if using_nfs?
             @logger.info("Using NFS_guest, preparing NFS settings by reading host IP and machine IP")
-            add_nfs_settings_to_env!(env)
+            add_ips_to_env!(env)
           end
         end
 
@@ -35,10 +36,9 @@ module VagrantPlugins
         # mounting.
         #
         # The ! indicates that this method modifies its argument.
-        def add_nfs_settings_to_env!(env)
+        def add_ips_to_env!(env)
           adapter, host_ip = find_host_only_adapter
-          machine_ip       = nil
-          machine_ip       = read_machine_ip(adapter) if adapter
+          machine_ip       = read_static_machine_ips || read_dynamic_machine_ip(adapter)
 
           raise Vagrant::Errors::NFSNoHostonlyNetwork if !host_ip || !machine_ip
 
@@ -64,6 +64,25 @@ module VagrantPlugins
           nil
         end
 
+        # Returns the IP address(es) of the guest by looking for static IPs
+        # given to host only adapters in the Vagrantfile
+        #
+        # @return [Array]<String> Configured static IPs
+        def read_static_machine_ips
+          ips = []
+          @machine.config.vm.networks.each do |type, options|
+            if type == :private_network && options[:ip].is_a?(String)
+              ips << options[:ip]
+            end
+          end
+
+          if ips.empty?
+            return nil
+          end
+
+          ips
+        end
+
         # Returns the IP address of the guest by looking at vbox guest property
         # for the appropriate guest adapter.
         #
@@ -72,7 +91,7 @@ module VagrantPlugins
         #
         # @param [Integer] adapter number to read IP for
         # @return [String] ip address of adapter
-        def read_machine_ip(adapter)
+        def read_dynamic_machine_ip(adapter)
           # vbox guest properties are 0-indexed, while showvminfo network
           # interfaces are 1-indexed. go figure.
           guestproperty_adapter = adapter - 1

@@ -1,6 +1,6 @@
 # VAGRANT-BEGIN: <%= user %> <%= uuid %>
 <% ips.each do |ip| %>
-<% folders.each do |name, opts| %>
+<% folders.each do |dirs, opts| %>
 "<%= opts[:guestpath] %>" <%= ip %>(<%= opts[:linux__nfs_options].join(",") %>)
 <% end %>
 <% end %>

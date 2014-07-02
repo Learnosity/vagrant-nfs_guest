@@ -1,25 +1,25 @@
 require 'zlib'
+require 'json'
 
 module VagrantPlugins
   module SyncedFolderNFSGuest
     class SyncedFolder < Vagrant.plugin("2", :synced_folder)
-      def usable?(machine)
-        # NFS is always available
-        true
-      end
-
-      def prepare(machine, folders, opts)
-        # Nothing is necessary to do before VM boot.
+      def usable?(machine, raise_error=false)
+        # If the machine explicitly said NFS is not supported, then
+        # it isn't supported.
+        if !machine.config.nfs_guest.functional
+          return false
+        end
+        return true if machine.env.host.capability(:nfs_installed)
+        return true if machine.guest.capability(:nfs_installed)
+        return false if !raise_error
+        raise Vagrant::Errors::NFSNotSupported
       end
 
       def enable(machine, folders, nfsopts)
         raise Vagrant::Errors::NFSNoHostIP if !nfsopts[:nfs_guest_host_ip]
         raise Vagrant::Errors::NFSNoGuestIP if !nfsopts[:nfs_guest_machine_ip]
 
-        if !machine.guest.capability(:export_nfs_capable)
-          raise VagrantPlugins::SyncedFolderNFSGuest::Error, :no_nfsd
-        end
-        
         machine_ip = nfsopts[:nfs_guest_machine_ip]
         machine_ip = [machine_ip] if !machine_ip.is_a?(Array)
 
@@ -33,13 +33,15 @@ module VagrantPlugins
           mount_folders[id] = opts.dup if opts[:guestpath]
         end
 
-        machine.ui.info I18n.t("vagrant.actions.vm.nfs.exporting")
+        machine.ui.info I18n.t("vagrant_nfs_guest.actions.vm.nfs.exporting")
         machine.guest.capability(
-          :export_nfs_folders, nfsopts[:nfs_guest_host_ip], mount_folders)
+          :nfs_export, nfsopts[:nfs_guest_host_ip], mount_folders)
 
-        machine.ui.info I18n.t("vagrant.actions.vm.nfs.mounting")
-        machine.env.host.mount_nfs_folders(
-          machine.id, machine_ip, mount_folders)
+        machine.ui.info I18n.t("vagrant_nfs_guest.actions.vm.nfs.mounting")
+        machine.env.host.capability(
+          :nfs_mount,
+          machine.ui, machine.id, machine_ip, mount_folders
+        )
       end
 
       protected

@@ -1,6 +1,0 @@
-en:
-  vagrant:
-    config:
-      nfs_guest:
-        errors:
-          no_nfsd: "Guest doesn't have the necessary NFS server installed"
