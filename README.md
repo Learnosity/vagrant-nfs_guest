@@ -17,17 +17,7 @@ Basically it's just the usual NFS synced folders in Vagrant but the roles are re
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-    gem 'vagrant-nfs_guest'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install vagrant-nfs_guest
+    $ vagrant plugin install vagrant-nfs_guest
 
 ## Usage
 
@@ -35,6 +25,13 @@ To enable for example:
 
 ```config.vm.synced_folder 'srv', '/srv', type: 'nfs_guest'```
 
+## Building
+
+We use 'chruby' to allow a virtual ruby environment for developement. The 'bundle' gem is needed to build and run
+
+    $ bundle install
+    $ bundle exec vagrant
+    
 ## Contributing
 
 1. Fork it
