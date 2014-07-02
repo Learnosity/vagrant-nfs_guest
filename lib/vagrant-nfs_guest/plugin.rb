@@ -68,8 +68,8 @@ module VagrantPlugins
 
       action_hook(:nfs_guest, :machine_action_up) do |hook|
         require_relative "action/prepare_nfs_guest_settings"
-        hook.before(
-          VagrantPlugins::ProviderVirtualBox::Action::PrepareNFSSettings,
+        hook.after(
+          VagrantPlugins::ProviderVirtualBox::Action::Boot,
           Action::PrepareNFSGuestSettings
         )
       end
