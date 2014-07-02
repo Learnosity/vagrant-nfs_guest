@@ -16,12 +16,13 @@ module VagrantPlugins
         def call(env)
           @machine = env[:machine]
 
-          @app.call(env)
-
           if using_nfs?
             @logger.info("Using NFS_guest, preparing NFS settings by reading host IP and machine IP")
             add_ips_to_env!(env)
           end
+
+          @app.call(env)
+
         end
 
         # We're using NFS if we have any synced folder with NFS configured. If

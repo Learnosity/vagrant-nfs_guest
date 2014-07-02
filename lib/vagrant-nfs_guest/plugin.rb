@@ -74,7 +74,44 @@ module VagrantPlugins
         )
       end
 
+      action_hook(:nfs_guest, :machine_action_reload) do |hook|
+        require_relative "action/prepare_nfs_guest_settings"
+        hook.before(
+          VagrantPlugins::ProviderVirtualBox::Action::PrepareNFSSettings,
+          Action::PrepareNFSGuestSettings
+        )
+      end
+
+      action_hook(:nfs_guest, :machine_action_resume) do |hook|
+        require_relative "action/mount_nfs"
+        require_relative "action/prepare_nfs_guest_settings"
+        hook.after(
+          VagrantPlugins::ProviderVirtualBox::Action::WaitForCommunicator,
+          Action::PrepareNFSGuestSettings
+        )
+        hook.after(
+          Action::PrepareNFSGuestSettings,
+          Action::MountNFS
+        )
+      end
+
       action_hook(:nfs_guest, :machine_action_halt) do |hook|
+        require_relative "action/unmount_nfs"
+        hook.before(
+          Vagrant::Action::Builtin::GracefulHalt,
+          Action::UnmountNFS
+        )
+      end
+
+      action_hook(:nfs_guest, :machine_action_reload) do |hook|
+        require_relative "action/unmount_nfs"
+        hook.before(
+          Vagrant::Action::Builtin::GracefulHalt,
+          Action::UnmountNFS
+        )
+      end
+
+      action_hook(:nfs_guest, :machine_action_package) do |hook|
         require_relative "action/unmount_nfs"
         hook.before(
           Vagrant::Action::Builtin::GracefulHalt,
@@ -86,6 +123,14 @@ module VagrantPlugins
         require_relative "action/unmount_nfs"
         hook.after(
           Vagrant::Action::Builtin::DestroyConfirm,
+          Action::UnmountNFS
+        )
+      end
+
+      action_hook(:nfs_guest, :machine_action_suspend) do |hook|
+        require_relative "action/unmount_nfs"
+        hook.before(
+          VagrantPlugins::ProviderVirtualBox::Action::Suspend,
           Action::UnmountNFS
         )
       end
