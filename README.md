@@ -17,7 +17,15 @@ Basically it's just the usual NFS synced folders in Vagrant but the roles are re
 
 ## Installation
 
-    $ vagrant plugin install vagrant-nfs_guest
+    vagrant plugin install vagrant-nfs_guest
+
+## Install from sources
+
+    git clone https://github.com/Learnosity/vagrant-nfs_guest.git
+    cd vagrant-nfs_guest
+    bundle install
+    bundle exec rake build
+    vagrant plugin install pkg/vagrant-nfs_guest-VERSION.gem
 
 ## Usage
 
@@ -29,8 +37,10 @@ To enable for example put similar in the Vagrantfile:
 
 We use 'chruby' to allow a virtual ruby environment for developement. The 'bundle' gem is needed to build and run
 
-    $ bundle install
-    $ bundle exec vagrant
+    git clone https://github.com/Learnosity/vagrant-nfs_guest.git
+    cd vagrant-nfs_guest
+    bundle install
+    bundle exec vagrant
     
 ## Contributing
 
