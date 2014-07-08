@@ -1,4 +1,3 @@
-require 'json'
 module VagrantPlugins
   module SyncedFolderNFSGuest
     module Action

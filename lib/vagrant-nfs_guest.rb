@@ -1,7 +1,6 @@
 require "pathname"
 
 require "vagrant-nfs_guest/plugin"
-require "vagrant-nfs_guest/hosts/bsd/plugin"
 
 module VagrantPlugins
   module SyncedFolderNFSGuest

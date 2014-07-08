@@ -9,6 +9,7 @@ en:
     guests:
       linux:
         nfs_export: "Preparing to edit /etc/exports on the guest..."
+        nfs_server_installing: "Installing nfs server on the guest..."
 
     errors:
       nfs_update_exports_failed: |-
@@ -41,3 +42,9 @@ en:
 
         Stderr from the command:
         %{stderr}
+
+      nfs_server_missing: |-
+        Guest is missing the required NFS server daemon.
+
+      nfs_server_not_installed: |-
+        Guest cannot install the required NFS server daemon.

@@ -51,9 +51,24 @@ module VagrantPlugins
         GuestLinux::Cap::NFSExport
       end
 
+      guest_capability(:linux, :nfs_test_command) do
+        require_relative "guests/linux/cap/nfs_export"
+        GuestLinux::Cap::NFSExport
+      end
+
       guest_capability(:linux, :nfs_exports_template) do
         require_relative "guests/linux/cap/nfs_export"
         GuestLinux::Cap::NFSExport
+      end
+
+      guest_capability(:ubuntu, "nfs_server_installed") do
+        require_relative "guests/ubuntu/cap/nfs_server"
+        GuestUbuntu::Cap::NFSServer
+      end
+
+      guest_capability(:ubuntu, :nfs_server_install) do
+        require_relative "guests/ubuntu/cap/nfs_server"
+        GuestUbuntu::Cap::NFSServer
       end
 
       guest_capability(:linux, :read_uid) do
@@ -64,6 +79,16 @@ module VagrantPlugins
       guest_capability(:linux, :read_gid) do
         require_relative "guests/linux/cap/read_user_ids"
         GuestLinux::Cap::ReadUserIDs
+      end
+
+      host_capability("bsd", "nfs_mount") do
+        require_relative "hosts/bsd/cap/mount_nfs"
+        HostBSD::Cap::MountNFS
+      end
+
+      host_capability("bsd", "nfs_unmount") do
+        require_relative "hosts/bsd/cap/unmount_nfs"
+        HostBSD::Cap::UnmountNFS
       end
 
       action_hook(:nfs_guest, :machine_action_up) do |hook|

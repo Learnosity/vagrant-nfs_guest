@@ -1,5 +1,4 @@
 require 'zlib'
-require 'json'
 
 module VagrantPlugins
   module SyncedFolderNFSGuest
@@ -11,7 +10,6 @@ module VagrantPlugins
           return false
         end
         return true if machine.env.host.capability(:nfs_installed)
-        return true if machine.guest.capability(:nfs_installed)
         return false if !raise_error
         raise Vagrant::Errors::NFSNotSupported
       end
@@ -19,6 +17,16 @@ module VagrantPlugins
       def enable(machine, folders, nfsopts)
         raise Vagrant::Errors::NFSNoHostIP if !nfsopts[:nfs_guest_host_ip]
         raise Vagrant::Errors::NFSNoGuestIP if !nfsopts[:nfs_guest_machine_ip]
+
+        if machine.guest.capability?(:nfs_server_installed)
+          installed = machine.guest.capability(:nfs_server_installed)
+          if !installed
+            can_install = machine.guest.capability?(:nfs_server_install)
+            raise Errors::NFSServerNotInstalledInGuest if !can_install
+            machine.ui.info I18n.t("vagrant_nfs_guest.guests.linux.nfs_server_installing")
+            machine.guest.capability(:nfs_server_install)
+          end
+        end
 
         machine_ip = nfsopts[:nfs_guest_machine_ip]
         machine_ip = [machine_ip] if !machine_ip.is_a?(Array)
