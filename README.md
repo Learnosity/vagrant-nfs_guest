@@ -2,18 +2,22 @@
 
 ## What's New?
 
-- Supports Vagrant 1.6!
+- Supports Vagrant 1.6! (For pre-1.5 vagrant support use the v0.0.4 release as Vagrant has incompatible changes)
 - Handles actions ```up```, ```halt```, ```destroy```, ```suspend```, ```resume``` and ```package``` properly
 - Uses retryable() for host to guest communications allow more fault tolerance
 - Better error messages and handling
 - Re-organisation of modules and class to better match Vagrant proper
 - Simplified the plugin events binding
+- Will install the NFS daemon on the guest if the guest capability is supported (Ubuntu only at this stage)
 
 ## Overview
 
 Allows a guest VM to export synced folders via NFS and the host to mount them.
 
 Basically it's just the usual NFS synced folders in Vagrant but the roles are reversed.
+
+**WARNING** this has only been tested fully using an OSX host and a Ubuntu guest.
+We're happy to receive pull-request to support alternatives hosts and guests. To implement this support is relatively trivial if you look in ./lib/hosts and ./lib/guests, and then just modify the "plugin.py" to include the new capabilities.
 
 ## Installation
 
