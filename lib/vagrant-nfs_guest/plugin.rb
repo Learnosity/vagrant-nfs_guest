@@ -1,13 +1,13 @@
 begin
   require "vagrant"
 rescue LoadError
-  raise "The Vagrant AWS plugin must be run within Vagrant."
+  raise "The Vagrant NFS Guest plugin must be run within Vagrant."
 end
 
 # This is a sanity check to make sure no one is attempting to install
 # this into an early Vagrant version.
 if Vagrant::VERSION < "1.2.0"
-  raise "The Vagrant AWS plugin is only compatible with Vagrant 1.2+"
+  raise "The Vagrant NFS Guest plugin is only compatible with Vagrant 1.2+"
 end
 
 module VagrantPlugins
@@ -17,8 +17,10 @@ module VagrantPlugins
     class Plugin < Vagrant.plugin("2")
       name "vagrant-nfs_guest"
       description <<-DESC
-      The NFS Guest synced folders plugin enables you to use NFS exports from
-      the Guest as a synced folder implementation.
+      The Vagrant NFS Guest synced folders plugin enables you to use NFS exports from
+      the Guest as a synced folder implementation. This allows the guest to utilise
+      inotify (eg. file watchers) and other filesystem related functions that don't
+      work across NFS from the host.
       DESC
 
       config(:nfs_guest) do
