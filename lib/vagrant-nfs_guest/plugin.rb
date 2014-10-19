@@ -93,6 +93,16 @@ module VagrantPlugins
         HostBSD::Cap::UnmountNFS
       end
 
+      host_capability(:linux, "nfs_mount") do
+        require_relative "hosts/linux/cap/mount_nfs"
+        HostLinux::Cap::MountNFS
+      end
+
+      host_capability(:linux, "nfs_unmount") do
+        require_relative "hosts/linux/cap/unmount_nfs"
+        HostLinux::Cap::UnmountNFS
+      end
+
       action_hook(:nfs_guest, :machine_action_up) do |hook|
         require_relative "action/prepare_nfs_guest_settings"
         hook.after(
