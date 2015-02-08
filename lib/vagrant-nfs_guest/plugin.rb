@@ -63,6 +63,21 @@ module VagrantPlugins
         GuestLinux::Cap::NFSExport
       end
 
+      guest_capability(:debian, :nfs_test_command) do
+        require_relative "guests/debian/cap/nfs_server"
+        GuestDebian::Cap::NFSServer
+      end
+
+      guest_capability(:debian, "nfs_server_installed") do
+        require_relative "guests/debian/cap/nfs_server"
+        GuestDebian::Cap::NFSServer
+      end
+
+      guest_capability(:debian, :nfs_server_install) do
+        require_relative "guests/debian/cap/nfs_server"
+        GuestDebian::Cap::NFSServer
+      end
+
       guest_capability(:ubuntu, "nfs_server_installed") do
         require_relative "guests/ubuntu/cap/nfs_server"
         GuestUbuntu::Cap::NFSServer
