@@ -15,7 +15,7 @@ module VagrantPlugins
       end
 
       def enable(machine, folders, nfsopts)
-        verify_nfs_options(folders, nfsopts)
+        verify_nfs_options(machine, nfsopts)
         verify_nfs_installation(machine) if machine.guest.capability?(:nfs_server_installed)
 
         machine_ip = nfsopts[:nfs_guest_machine_ip]
@@ -81,18 +81,18 @@ module VagrantPlugins
         end
       end
 
-      def verify_nfs_options(folders, nfsopts = {})
+      def verify_nfs_options(machine, nfsopts = {})
         if !nfsopts[:nfs_guest_host_ip]
-          if folder = folders.detect { |_, v| !!v[:host_ip] }
-            nfsopts[:nfs_guest_host_ip] = folder[1][:host_ip]
+          if machine.config.nfs_guest.host_ip
+            nfsopts[:nfs_guest_host_ip] = machine.config.nfs_guest.host_ip
           end
 
           raise Vagrant::Errors::NFSNoHostIP if !nfsopts[:nfs_guest_host_ip]
         end
 
         if !nfsopts[:nfs_guest_machine_ip]
-          if folder = folders.detect { |_, v| !!extract_guest_ip(v) }
-            nfsopts[:nfs_guest_machine_ip] = extract_guest_ip(folder[1])
+          if machine.config.nfs_guest.guest_ip
+            nfsopts[:nfs_guest_machine_ip] = machine.config.nfs_guest.guest_ip
           end
 
           raise Vagrant::Errors::NFSNoGuestIP if !nfsopts[:nfs_guest_machine_ip]

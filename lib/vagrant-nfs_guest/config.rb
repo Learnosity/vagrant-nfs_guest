@@ -6,6 +6,8 @@ module VagrantPlugins
       attr_accessor :functional
       attr_accessor :map_uid
       attr_accessor :map_gid
+      attr_accessor :host_ip
+      attr_accessor :guest_ip
 
       def initialize
         super
@@ -13,12 +15,16 @@ module VagrantPlugins
         @functional = UNSET_VALUE
         @map_uid    = UNSET_VALUE
         @map_gid    = UNSET_VALUE
+        @host_ip    = UNSET_VALUE
+        @guest_ip   = UNSET_VALUE
       end
 
       def finalize!
         @functional = true if @functional == UNSET_VALUE
         @map_uid = nil if @map_uid == UNSET_VALUE
         @map_gid = nil if @map_gid == UNSET_VALUE
+        @host_ip = nil if @host_ip == UNSET_VALUE
+        @guest_ip = nil if @guest_ip == UNSET_VALUE
       end
 
       def to_s
