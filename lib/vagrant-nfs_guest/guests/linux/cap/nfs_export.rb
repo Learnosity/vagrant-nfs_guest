@@ -106,10 +106,7 @@ module VagrantPlugins
             # by Vagrant
             #
             machine.communicate.sudo(
-              "sed -r -e '/^# VAGRANT-BEGIN:( #{user})? #{id}/,/^# " +
-              "VAGRANT-END:( #{user})? #{id}/ d' -ibak /etc/exports",
-              error_class: Errors::GuestNFSError,
-              error_key: :nfs_guest_clean
+              "sed -r -e '/^# VAGRANT(-NFS_GUEST)?-BEGIN/,/^# VAGRANT(-NFS_GUEST)?-END/ d' -ibak /etc/exports"
             )
           end
 
