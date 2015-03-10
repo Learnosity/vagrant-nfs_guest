@@ -48,3 +48,6 @@ en:
 
       nfs_server_not_installed: |-
         Guest cannot install the required NFS server daemon.
+
+      nfs_guest_clean: |-
+        Something failed while cleaning up NFS shared folders on the guest.

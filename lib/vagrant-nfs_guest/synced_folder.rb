@@ -15,18 +15,8 @@ module VagrantPlugins
       end
 
       def enable(machine, folders, nfsopts)
-        raise Vagrant::Errors::NFSNoHostIP if !nfsopts[:nfs_guest_host_ip]
-        raise Vagrant::Errors::NFSNoGuestIP if !nfsopts[:nfs_guest_machine_ip]
-
-        if machine.guest.capability?(:nfs_server_installed)
-          installed = machine.guest.capability(:nfs_server_installed)
-          if !installed
-            can_install = machine.guest.capability?(:nfs_server_install)
-            raise Errors::NFSServerNotInstalledInGuest if !can_install
-            machine.ui.info I18n.t("vagrant_nfs_guest.guests.linux.nfs_server_installing")
-            machine.guest.capability(:nfs_server_install)
-          end
-        end
+        verify_nfs_options(machine, nfsopts)
+        verify_nfs_installation(machine) if machine.guest.capability?(:nfs_server_installed)
 
         machine_ip = nfsopts[:nfs_guest_machine_ip]
         machine_ip = [machine_ip] if !machine_ip.is_a?(Array)
@@ -78,6 +68,39 @@ module VagrantPlugins
         # Get UID/GID from guests user if we've made it this far
         # (value == :auto)
         return machine.guest.capability("read_#{perm}".to_sym)
+      end
+
+      private
+
+      def verify_nfs_installation(machine)
+        if !machine.guest.capability(:nfs_server_installed)
+          raise Errors::NFSServerNotInstalledInGuest unless machine.guest.capability?(:nfs_server_install)
+
+          machine.ui.info I18n.t("vagrant_nfs_guest.guests.linux.nfs_server_installing")
+          machine.guest.capability(:nfs_server_install)
+        end
+      end
+
+      def verify_nfs_options(machine, nfsopts = {})
+        if !nfsopts[:nfs_guest_host_ip]
+          if machine.config.nfs_guest.host_ip
+            nfsopts[:nfs_guest_host_ip] = machine.config.nfs_guest.host_ip
+          end
+
+          raise Vagrant::Errors::NFSNoHostIP if !nfsopts[:nfs_guest_host_ip]
+        end
+
+        if !nfsopts[:nfs_guest_machine_ip]
+          if machine.config.nfs_guest.guest_ip
+            nfsopts[:nfs_guest_machine_ip] = machine.config.nfs_guest.guest_ip
+          end
+
+          raise Vagrant::Errors::NFSNoGuestIP if !nfsopts[:nfs_guest_machine_ip]
+        end
+      end
+
+      def extract_guest_ip(folder)
+        folder[:guest_ip] || folder[:machine_ip]
       end
     end
   end
