@@ -23,16 +23,12 @@ module VagrantPlugins
       work across NFS from the host.
       DESC
 
-      config(:nfs_guest) do
-        require_relative "config"
-        Config
-      end
-
-      synced_folder(:nfs_guest, 4) do
+      synced_folder(:nfs, 4) do
         require_relative "synced_folder"
         SyncedFolder
       end
 
+      #### GENERAL LINUX ####
       guest_capability(:linux, :nfs_export) do
         require_relative "guests/linux/cap/nfs_export"
         GuestLinux::Cap::NFSExport
@@ -63,6 +59,17 @@ module VagrantPlugins
         GuestLinux::Cap::NFSExport
       end
 
+      guest_capability(:linux, :read_uid) do
+        require_relative "guests/linux/cap/read_user_ids"
+        GuestLinux::Cap::ReadUserIDs
+      end
+
+      guest_capability(:linux, :read_gid) do
+        require_relative "guests/linux/cap/read_user_ids"
+        GuestLinux::Cap::ReadUserIDs
+      end
+
+      #### DEBIAN ####
       guest_capability(:debian, :nfs_test_command) do
         require_relative "guests/debian/cap/nfs_server"
         GuestDebian::Cap::NFSServer
@@ -78,6 +85,7 @@ module VagrantPlugins
         GuestDebian::Cap::NFSServer
       end
 
+      #### UBUNTU ####
       guest_capability(:ubuntu, "nfs_server_installed") do
         require_relative "guests/ubuntu/cap/nfs_server"
         GuestUbuntu::Cap::NFSServer
@@ -88,16 +96,7 @@ module VagrantPlugins
         GuestUbuntu::Cap::NFSServer
       end
 
-      guest_capability(:linux, :read_uid) do
-        require_relative "guests/linux/cap/read_user_ids"
-        GuestLinux::Cap::ReadUserIDs
-      end
-
-      guest_capability(:linux, :read_gid) do
-        require_relative "guests/linux/cap/read_user_ids"
-        GuestLinux::Cap::ReadUserIDs
-      end
-
+      #### HOST BSD ####
       host_capability("bsd", "nfs_mount") do
         require_relative "hosts/bsd/cap/mount_nfs"
         HostBSD::Cap::MountNFS
@@ -108,6 +107,7 @@ module VagrantPlugins
         HostBSD::Cap::UnmountNFS
       end
 
+      #### HOST LINUX ####
       host_capability(:linux, "nfs_mount") do
         require_relative "hosts/linux/cap/mount_nfs"
         HostLinux::Cap::MountNFS
@@ -118,36 +118,8 @@ module VagrantPlugins
         HostLinux::Cap::UnmountNFS
       end
 
-      action_hook(:nfs_guest, :machine_action_up) do |hook|
-        require_relative "action/prepare_nfs_guest_settings"
-        hook.after(
-          VagrantPlugins::ProviderVirtualBox::Action::Boot,
-          Action::PrepareNFSGuestSettings
-        )
-      end
-
-      action_hook(:nfs_guest, :machine_action_reload) do |hook|
-        require_relative "action/prepare_nfs_guest_settings"
-        hook.before(
-          VagrantPlugins::ProviderVirtualBox::Action::PrepareNFSSettings,
-          Action::PrepareNFSGuestSettings
-        )
-      end
-
-      action_hook(:nfs_guest, :machine_action_resume) do |hook|
-        require_relative "action/mount_nfs"
-        require_relative "action/prepare_nfs_guest_settings"
-        hook.after(
-          VagrantPlugins::ProviderVirtualBox::Action::WaitForCommunicator,
-          Action::PrepareNFSGuestSettings
-        )
-        hook.after(
-          Action::PrepareNFSGuestSettings,
-          Action::MountNFS
-        )
-      end
-
-      action_hook(:nfs_guest, :machine_action_halt) do |hook|
+      #### ACTIONS ####
+      action_hook(:nfs, :machine_action_halt) do |hook|
         require_relative "action/unmount_nfs"
         hook.before(
           Vagrant::Action::Builtin::GracefulHalt,
@@ -155,7 +127,7 @@ module VagrantPlugins
         )
       end
 
-      action_hook(:nfs_guest, :machine_action_reload) do |hook|
+      action_hook(:nfs, :machine_action_reload) do |hook|
         require_relative "action/unmount_nfs"
         hook.before(
           Vagrant::Action::Builtin::GracefulHalt,
@@ -163,7 +135,7 @@ module VagrantPlugins
         )
       end
 
-      action_hook(:nfs_guest, :machine_action_package) do |hook|
+      action_hook(:nfs, :machine_action_package) do |hook|
         require_relative "action/unmount_nfs"
         hook.before(
           Vagrant::Action::Builtin::GracefulHalt,
@@ -171,7 +143,7 @@ module VagrantPlugins
         )
       end
 
-      action_hook(:nfs_guest, :machine_action_destroy) do |hook|
+      action_hook(:nfs, :machine_action_destroy) do |hook|
         require_relative "action/unmount_nfs"
         hook.after(
           Vagrant::Action::Builtin::DestroyConfirm,
@@ -179,11 +151,19 @@ module VagrantPlugins
         )
       end
 
-      action_hook(:nfs_guest, :machine_action_suspend) do |hook|
+      action_hook(:nfs, :machine_action_suspend) do |hook|
         require_relative "action/unmount_nfs"
         hook.before(
           VagrantPlugins::ProviderVirtualBox::Action::Suspend,
           Action::UnmountNFS
+        )
+      end
+
+      action_hook(:nfs, :machine_action_resume) do |hook|
+        require_relative "action/mount_nfs"
+        hook.after(
+          VagrantPlugins::ProviderVirtualBox::Action::CheckAccessible,
+          Action::MountNFS
         )
       end
     end

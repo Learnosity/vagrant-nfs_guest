@@ -6,7 +6,7 @@ module VagrantPlugins
 
           def self.nfs_mount(environment, ui, id, ips, folders)
             folders.each do |name, opts|
-              if opts[:type] != :nfs_guest
+              if opts[:type] != :nfs
                 next
               end
 
