@@ -142,8 +142,13 @@ module VagrantPlugins
                   error_class: Errors::GuestNFSError,
                   error_key: :nfs_create_mounts_failed
                 )
+
+                # Folder options
+                opts[:owner] ||= machine.ssh_info[:username]
+                opts[:group] ||= machine.ssh_info[:username]
+
                 machine.communicate.sudo(
-                  "chown -R vagrant:vagrant #{expanded_guest_path}",
+                  "chown -R #{opts[:owner]}:#{opts[:group]} #{expanded_guest_path}",
                   error_class: Errors::GuestNFSError,
                   error_key: :nfs_create_mounts_failed
                 )
