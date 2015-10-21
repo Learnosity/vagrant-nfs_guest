@@ -15,10 +15,9 @@ module VagrantPlugins
       end
 
       def enable(machine, folders, nfsopts)
-        verify_nfs_options(machine, nfsopts)
         verify_nfs_installation(machine) if machine.guest.capability?(:nfs_server_installed)
 
-        machine_ip = nfsopts[:nfs_guest_machine_ip]
+        machine_ip = nfsopts[:nfs_machine_ip]
         machine_ip = [machine_ip] if !machine_ip.is_a?(Array)
 
         # Prepare the folder, this means setting up various options
@@ -33,13 +32,35 @@ module VagrantPlugins
 
         machine.ui.info I18n.t("vagrant_nfs_guest.actions.vm.nfs.exporting")
         machine.guest.capability(
-          :nfs_export, nfsopts[:nfs_guest_host_ip], mount_folders)
+          :nfs_export, nfsopts[:nfs_host_ip], mount_folders)
 
         machine.ui.info I18n.t("vagrant_nfs_guest.actions.vm.nfs.mounting")
         machine.env.host.capability(
           :nfs_mount,
           machine.ui, machine.id, machine_ip, mount_folders
         )
+      end
+
+      def disable(machine, folders, _opts)
+        if machine.env.host.capability(:nfs_unmount)
+          machine_ip = nfsopts[:nfs_machine_ip]
+          machine_ip = [machine_ip] if !machine_ip.is_a?(Array)
+
+          # Only mount folders that have a guest path specified.
+          mount_folders = {}
+          folders.each do |id, opts|
+            mount_folders[id] = opts.dup if opts[:guestpath]
+          end
+
+          machine.env.host.capability(
+            :nfs_unmount,
+            machine.ui, machine.id, machine_ip, mount_folders
+          )
+        end
+
+        # Remove the shared folders from the VM metadata
+        names = folders.map { |id, _data| os_friendly_id(id) }
+        driver(machine).unshare_folders(names)
       end
 
       protected
@@ -79,28 +100,6 @@ module VagrantPlugins
           machine.ui.info I18n.t("vagrant_nfs_guest.guests.linux.nfs_server_installing")
           machine.guest.capability(:nfs_server_install)
         end
-      end
-
-      def verify_nfs_options(machine, nfsopts = {})
-        if !nfsopts[:nfs_guest_host_ip]
-          if machine.config.nfs_guest.host_ip
-            nfsopts[:nfs_guest_host_ip] = machine.config.nfs_guest.host_ip
-          end
-
-          raise Vagrant::Errors::NFSNoHostIP if !nfsopts[:nfs_guest_host_ip]
-        end
-
-        if !nfsopts[:nfs_guest_machine_ip]
-          if machine.config.nfs_guest.guest_ip
-            nfsopts[:nfs_guest_machine_ip] = machine.config.nfs_guest.guest_ip
-          end
-
-          raise Vagrant::Errors::NFSNoGuestIP if !nfsopts[:nfs_guest_machine_ip]
-        end
-      end
-
-      def extract_guest_ip(folder)
-        folder[:guest_ip] || folder[:machine_ip]
       end
     end
   end
