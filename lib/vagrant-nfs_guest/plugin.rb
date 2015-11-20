@@ -88,6 +88,26 @@ module VagrantPlugins
         GuestUbuntu::Cap::NFSServer
       end
 
+      guest_capability(:redhat, "nfs_server_installed") do
+        require_relative "guests/redhat/cap/nfs_server"
+        GuestRedHat::Cap::NFSServer
+      end
+
+      guest_capability(:redhat, :nfs_server_install) do
+        require_relative "guests/redhat/cap/nfs_server"
+        GuestRedHat::Cap::NFSServer
+      end
+
+      guest_capability(:linux, :nfs_check_command) do
+        require_relative "guests/redhat/cap/nfs_export"
+        GuestRedHat::Cap::NFSExport
+      end
+
+      guest_capability(:linux, :nfs_start_command) do
+        require_relative "guests/redhat/cap/nfs_export"
+        GuestRedHat::Cap::NFSExport
+      end
+
       guest_capability(:linux, :read_uid) do
         require_relative "guests/linux/cap/read_user_ids"
         GuestLinux::Cap::ReadUserIDs
