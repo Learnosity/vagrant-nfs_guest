@@ -33,6 +33,7 @@ module VagrantPlugins
         SyncedFolder
       end
 
+      # ==== GUEST - BASE LINUX ====
       guest_capability(:linux, :nfs_export) do
         require_relative "guests/linux/cap/nfs_export"
         GuestLinux::Cap::NFSExport
@@ -63,6 +64,17 @@ module VagrantPlugins
         GuestLinux::Cap::NFSExport
       end
 
+      guest_capability(:linux, :read_uid) do
+        require_relative "guests/linux/cap/read_user_ids"
+        GuestLinux::Cap::ReadUserIDs
+      end
+
+      guest_capability(:linux, :read_gid) do
+        require_relative "guests/linux/cap/read_user_ids"
+        GuestLinux::Cap::ReadUserIDs
+      end
+
+      # ==== GUEST - DEBIAN ====
       guest_capability(:debian, :nfs_test_command) do
         require_relative "guests/debian/cap/nfs_server"
         GuestDebian::Cap::NFSServer
@@ -78,6 +90,7 @@ module VagrantPlugins
         GuestDebian::Cap::NFSServer
       end
 
+      # ==== GUEST - UBUNTU ====
       guest_capability(:ubuntu, "nfs_server_installed") do
         require_relative "guests/ubuntu/cap/nfs_server"
         GuestUbuntu::Cap::NFSServer
@@ -88,6 +101,7 @@ module VagrantPlugins
         GuestUbuntu::Cap::NFSServer
       end
 
+      # ==== GUEST - REDHAT ====
       guest_capability(:redhat, "nfs_server_installed") do
         require_relative "guests/redhat/cap/nfs_server"
         GuestRedHat::Cap::NFSServer
@@ -98,26 +112,17 @@ module VagrantPlugins
         GuestRedHat::Cap::NFSServer
       end
 
-      guest_capability(:linux, :nfs_check_command) do
+      guest_capability(:redhat, :nfs_check_command) do
         require_relative "guests/redhat/cap/nfs_export"
-        GuestRedHat::Cap::NFSExport
+        GuestRedHat::Cap::NFSServer
       end
 
-      guest_capability(:linux, :nfs_start_command) do
+      guest_capability(:redhat, :nfs_start_command) do
         require_relative "guests/redhat/cap/nfs_export"
-        GuestRedHat::Cap::NFSExport
+        GuestRedHat::Cap::NFSServer
       end
 
-      guest_capability(:linux, :read_uid) do
-        require_relative "guests/linux/cap/read_user_ids"
-        GuestLinux::Cap::ReadUserIDs
-      end
-
-      guest_capability(:linux, :read_gid) do
-        require_relative "guests/linux/cap/read_user_ids"
-        GuestLinux::Cap::ReadUserIDs
-      end
-
+      # ==== HOST - BSD ====
       host_capability("bsd", "nfs_mount") do
         require_relative "hosts/bsd/cap/mount_nfs"
         HostBSD::Cap::MountNFS
@@ -128,6 +133,7 @@ module VagrantPlugins
         HostBSD::Cap::UnmountNFS
       end
 
+      # ==== HOST - LINUX ====
       host_capability(:linux, "nfs_mount") do
         require_relative "hosts/linux/cap/mount_nfs"
         HostLinux::Cap::MountNFS
@@ -138,6 +144,7 @@ module VagrantPlugins
         HostLinux::Cap::UnmountNFS
       end
 
+      # ==== ACTION HOOKS ====
       action_hook(:nfs_guest, :machine_action_up) do |hook|
         require_relative "action/prepare_nfs_guest_settings"
         hook.after(
