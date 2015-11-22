@@ -113,12 +113,12 @@ module VagrantPlugins
       end
 
       guest_capability(:redhat, :nfs_check_command) do
-        require_relative "guests/redhat/cap/nfs_export"
+        require_relative "guests/redhat/cap/nfs_server"
         GuestRedHat::Cap::NFSServer
       end
 
       guest_capability(:redhat, :nfs_start_command) do
-        require_relative "guests/redhat/cap/nfs_export"
+        require_relative "guests/redhat/cap/nfs_server"
         GuestRedHat::Cap::NFSServer
       end
 
