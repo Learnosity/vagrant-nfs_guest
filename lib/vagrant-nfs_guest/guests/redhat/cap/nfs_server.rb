@@ -69,9 +69,9 @@ module VagrantPlugins
                 error_key: :nfs_start_failed
               )
             else
-              ['service rpcbind restart', 'service nfs restart'].each do |i|
+              ['rpcbind', 'nfs'].each do |i|
                 machine.communicate.sudo(
-                  i,
+                  "service #{i} restart",
                   error_class: Errors::GuestNFSError,
                   error_key: :nfs_start_failed
                 )
