@@ -11,7 +11,7 @@ module VagrantPlugins
         GuestDebian::Cap::NFSServer
       end
 
-      guest_capability(:debian, "nfs_server_installed") do
+      guest_capability(:debian, :nfs_server_installed) do
         require_relative "cap/nfs_server"
         GuestDebian::Cap::NFSServer
       end

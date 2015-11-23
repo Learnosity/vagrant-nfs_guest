@@ -6,7 +6,7 @@ module VagrantPlugins
       name "Red Hat Enterprise Linux guest"
       description "Red Hat Enterprise Linux guest support."
 
-      guest_capability(:redhat, "nfs_server_installed") do
+      guest_capability(:redhat, :nfs_server_installed) do
         require_relative "cap/nfs_server"
         GuestRedHat::Cap::NFSServer
       end

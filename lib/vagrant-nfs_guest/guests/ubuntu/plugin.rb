@@ -6,7 +6,7 @@ module VagrantPlugins
       name "Ubuntu guest"
       description "Ubuntu guest support."
 
-      guest_capability(:ubuntu, "nfs_server_installed") do
+      guest_capability(:ubuntu, :nfs_server_installed) do
         require_relative "cap/nfs_server"
         GuestUbuntu::Cap::NFSServer
       end
