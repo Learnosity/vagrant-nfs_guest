@@ -17,8 +17,18 @@ Allows a guest VM to export synced folders via NFS and the host to mount them.
 
 Basically it's just the usual NFS synced folders in Vagrant but the roles are reversed.
 
-**WARNING** this has only been tested fully using an OSX host and a Ubuntu guest by us.
-We're happy to receive pull-request to support alternatives hosts and guests. To implement this support is relatively trivial if you look in ./lib/hosts and ./lib/guests, and then just modify the "plugin.py" to include the new capabilities.
+Guest VMs we've tested include:
+- Ubuntu (precise, trusty)
+- CentOS (6.5, 6.6, 7)
+- Debian (wheezy)
+- other Linux based guests may work fine with the generic Linux support. But no guarantee
+
+Hosts we've tested include:
+- OSX (Mavericks, Yosemite, El Capitan)
+- Ubuntu (precise, trusty)
+- other Linux based OSs should work fine, but will need testing, again no guarantee
+
+We're happy to receive pull-request to support alternatives hosts and guests. To implement this support it's relatively trivial if you look in ./lib/hosts and ./lib/guests.
 
 ## Installation
 
@@ -46,6 +56,17 @@ We use 'chruby' to allow a virtual ruby environment for developement. The 'bundl
     cd vagrant-nfs_guest
     bundle install
     bundle exec vagrant
+
+You can test your handy work using the ```example_box``` by doing the following:
+    cd ./example_box/
+    bundle exec vagrant up
+
+You can ssh into the test VM using:
+    bundle exec vagrant ssh
+
+... and you can clean up with:
+    bundle exec vagrant destroy
+
     
 ## Contributing
 

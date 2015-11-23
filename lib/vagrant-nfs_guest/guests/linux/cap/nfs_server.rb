@@ -4,27 +4,35 @@ module VagrantPlugins
   module SyncedFolderNFSGuest
     module GuestLinux
       module Cap
-        class NFSExport
+        class NFSServer
           extend Vagrant::Util::Retryable
 
-          def self.nfs_apply_command(env)
-            "exportfs -r"
+          def self.nfs_apply_command(machine)
+            machine.communicate.sudo(
+              "exportfs -r",
+              error_class: Errors::GuestNFSError,
+              error_key: :nfs_apply_failed
+            )
           end
 
-          def self.nfs_check_command(env)
-            "/etc/init.d/nfs-kernel-server status"
+          def self.nfs_start_command(machine)
+            machine.communicate.sudo(
+              "/etc/init.d/nfs-kernel-server start",
+              error_class: Errors::GuestNFSError,
+              error_key: :nfs_start_failed
+            )
           end
 
-          def self.nfs_start_command(env)
-            "/etc/init.d/nfs-kernel-server start"
+          def self.nfs_check_command(machine)
+            machine.communicate.test(
+              "/etc/init.d/nfs-kernel-server status"
+            )
           end
 
-          def self.nfs_check_command(env)
-            "/etc/init.d/nfs-kernel-server status"
-          end
-
-          def self.nfs_test_command(env)
-            "which exportfs"
+          def self.nfs_test_command(machine)
+            machine.communicate.test(
+              "which exportfs"
+            )
           end
 
           def self.nfs_exports_template(machine)
@@ -33,34 +41,29 @@ module VagrantPlugins
           end
 
           def self.nfs_capable?(machine)
-            nfs_test_command = machine.guest.capability(:nfs_test_command)
-            machine.communicate.test(nfs_test_command)
+            machine.guest.capability(:nfs_test_command)
           end
 
           def self.nfs_apply_changes!(machine)
-            nfs_apply_command = machine.guest.capability(:nfs_apply_command)
-            machine.communicate.sudo(nfs_apply_command,
-                                     error_class: Errors::GuestNFSError,
-                                     error_key: :nfs_apply_failed
-                                    )
+            machine.guest.capability(:nfs_apply_command)
           end
 
           def self.nfs_start!(machine)
-            nfs_start_command = machine.guest.capability(:nfs_start_command)
-            machine.communicate.sudo(nfs_start_command,
-                                     error_class: Errors::GuestNFSError,
-                                     error_key: :nfs_start_failed
-                                    )
+            machine.guest.capability(:nfs_start_command)
           end
 
           def self.nfs_running?(machine)
-            nfs_test_command = machine.guest.capability(:nfs_check_command)
-            machine.communicate.test(nfs_test_command)
+            machine.guest.capability(:nfs_check_command)
           end
 
           def self.nfs_export(machine, ip, folders)
             if !nfs_capable?(machine)
                 raise Errors::NFSServerMissing
+            end
+
+            if machine.guest.capability?(:nfs_setup_firewall)
+              machine.ui.info I18n.t("vagrant_nfs_guest.guests.linux.nfs_setup_firewall")
+              machine.guest.capability(:nfs_setup_firewall, ip)
             end
 
             nfs_exports_template = machine.guest.capability(:nfs_exports_template)

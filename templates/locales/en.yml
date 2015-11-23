@@ -10,6 +10,7 @@ en:
       linux:
         nfs_export: "Preparing to edit /etc/exports on the guest..."
         nfs_server_installing: "Installing nfs server on the guest..."
+        nfs_setup_firewall: "Setup firewall on the guest to allow NFS exports..."
 
     errors:
       nfs_update_exports_failed: |-

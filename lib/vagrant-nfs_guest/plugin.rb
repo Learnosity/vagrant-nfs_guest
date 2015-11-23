@@ -10,6 +10,13 @@ if Vagrant::VERSION < "1.2.0"
   raise "The Vagrant NFS Guest plugin is only compatible with Vagrant 1.2+"
 end
 
+require_relative "guests/debian/plugin"
+require_relative "guests/linux/plugin"
+require_relative "guests/redhat/plugin"
+require_relative "guests/ubuntu/plugin"
+require_relative "hosts/bsd/plugin"
+require_relative "hosts/linux/plugin"
+
 module VagrantPlugins
   module SyncedFolderNFSGuest
     # This plugin implements Guest Exported NFS folders.
@@ -33,118 +40,6 @@ module VagrantPlugins
         SyncedFolder
       end
 
-      # ==== GUEST - BASE LINUX ====
-      guest_capability(:linux, :nfs_export) do
-        require_relative "guests/linux/cap/nfs_export"
-        GuestLinux::Cap::NFSExport
-      end
-
-      guest_capability(:linux, :nfs_apply_command) do
-        require_relative "guests/linux/cap/nfs_export"
-        GuestLinux::Cap::NFSExport
-      end
-
-      guest_capability(:linux, :nfs_check_command) do
-        require_relative "guests/linux/cap/nfs_export"
-        GuestLinux::Cap::NFSExport
-      end
-
-      guest_capability(:linux, :nfs_start_command) do
-        require_relative "guests/linux/cap/nfs_export"
-        GuestLinux::Cap::NFSExport
-      end
-
-      guest_capability(:linux, :nfs_test_command) do
-        require_relative "guests/linux/cap/nfs_export"
-        GuestLinux::Cap::NFSExport
-      end
-
-      guest_capability(:linux, :nfs_exports_template) do
-        require_relative "guests/linux/cap/nfs_export"
-        GuestLinux::Cap::NFSExport
-      end
-
-      guest_capability(:linux, :read_uid) do
-        require_relative "guests/linux/cap/read_user_ids"
-        GuestLinux::Cap::ReadUserIDs
-      end
-
-      guest_capability(:linux, :read_gid) do
-        require_relative "guests/linux/cap/read_user_ids"
-        GuestLinux::Cap::ReadUserIDs
-      end
-
-      # ==== GUEST - DEBIAN ====
-      guest_capability(:debian, :nfs_test_command) do
-        require_relative "guests/debian/cap/nfs_server"
-        GuestDebian::Cap::NFSServer
-      end
-
-      guest_capability(:debian, "nfs_server_installed") do
-        require_relative "guests/debian/cap/nfs_server"
-        GuestDebian::Cap::NFSServer
-      end
-
-      guest_capability(:debian, :nfs_server_install) do
-        require_relative "guests/debian/cap/nfs_server"
-        GuestDebian::Cap::NFSServer
-      end
-
-      # ==== GUEST - UBUNTU ====
-      guest_capability(:ubuntu, "nfs_server_installed") do
-        require_relative "guests/ubuntu/cap/nfs_server"
-        GuestUbuntu::Cap::NFSServer
-      end
-
-      guest_capability(:ubuntu, :nfs_server_install) do
-        require_relative "guests/ubuntu/cap/nfs_server"
-        GuestUbuntu::Cap::NFSServer
-      end
-
-      # ==== GUEST - REDHAT ====
-      guest_capability(:redhat, "nfs_server_installed") do
-        require_relative "guests/redhat/cap/nfs_server"
-        GuestRedHat::Cap::NFSServer
-      end
-
-      guest_capability(:redhat, :nfs_server_install) do
-        require_relative "guests/redhat/cap/nfs_server"
-        GuestRedHat::Cap::NFSServer
-      end
-
-      guest_capability(:redhat, :nfs_check_command) do
-        require_relative "guests/redhat/cap/nfs_server"
-        GuestRedHat::Cap::NFSServer
-      end
-
-      guest_capability(:redhat, :nfs_start_command) do
-        require_relative "guests/redhat/cap/nfs_server"
-        GuestRedHat::Cap::NFSServer
-      end
-
-      # ==== HOST - BSD ====
-      host_capability("bsd", "nfs_mount") do
-        require_relative "hosts/bsd/cap/mount_nfs"
-        HostBSD::Cap::MountNFS
-      end
-
-      host_capability("bsd", "nfs_unmount") do
-        require_relative "hosts/bsd/cap/unmount_nfs"
-        HostBSD::Cap::UnmountNFS
-      end
-
-      # ==== HOST - LINUX ====
-      host_capability(:linux, "nfs_mount") do
-        require_relative "hosts/linux/cap/mount_nfs"
-        HostLinux::Cap::MountNFS
-      end
-
-      host_capability(:linux, "nfs_unmount") do
-        require_relative "hosts/linux/cap/unmount_nfs"
-        HostLinux::Cap::UnmountNFS
-      end
-
-      # ==== ACTION HOOKS ====
       action_hook(:nfs_guest, :machine_action_up) do |hook|
         require_relative "action/prepare_nfs_guest_settings"
         hook.after(
