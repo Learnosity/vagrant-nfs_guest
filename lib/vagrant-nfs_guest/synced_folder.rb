@@ -61,12 +61,6 @@ module VagrantPlugins
 
         machine.ui.info I18n.t("vagrant_nfs_guest.actions.vm.nfs.exporting")
         machine.guest.capability(:nfs_export, host_ip, mount_folders)
-
-        #machine.ui.info I18n.t("vagrant_nfs_guest.actions.vm.nfs.mounting")
-        #machine.env.host.capability(
-        #  :nfs_mount,
-        #  machine.ui, machine.id, machine_ip, mount_folders
-        #)
       end
 
       protected
