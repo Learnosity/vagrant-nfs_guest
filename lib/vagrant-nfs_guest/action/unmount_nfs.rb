@@ -16,10 +16,7 @@ module VagrantPlugins
             @machine.ui.info(I18n.t("vagrant_nfs_guest.actions.vm.nfs.unmounting"))
             folders = @machine.config.vm.synced_folders
 
-            @machine.env.host.capability(
-              :nfs_unmount,
-              @machine.ui, folders
-            )
+            @machine.env.host.capability(:nfs_unmount, @machine.ui, folders)
           end
 
           @app.call(env)

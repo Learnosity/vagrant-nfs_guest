@@ -52,3 +52,8 @@ en:
 
       nfs_guest_clean: |-
         Something failed while cleaning up NFS shared folders on the guest.
+
+      provider_missing_nfs_setting_cap: |-
+          Missing provider support in vagrant-nfs_guest plugin for retrieving host and guest IPs.
+
+          Currently only Virtualbox provider is supported.

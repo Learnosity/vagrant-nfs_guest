@@ -25,6 +25,9 @@ module VagrantPlugins
         error_key(:nfs_server_not_installed)
       end
 
+      class ProviderNFSSettingsCapMissing < Error
+        error_key(:provider_missing_nfs_setting_cap)
+      end
     end
   end
 end

@@ -16,6 +16,7 @@ require_relative "guests/redhat/plugin"
 require_relative "guests/ubuntu/plugin"
 require_relative "hosts/bsd/plugin"
 require_relative "hosts/linux/plugin"
+require_relative "providers/virtualbox/plugin"
 
 module VagrantPlugins
   module SyncedFolderNFSGuest
@@ -35,36 +36,32 @@ module VagrantPlugins
         Config
       end
 
-      synced_folder(:nfs_guest, 4) do
+      synced_folder(:nfs_guest, 5) do
         require_relative "synced_folder"
         SyncedFolder
       end
 
       action_hook(:nfs_guest, :machine_action_up) do |hook|
-        require_relative "action/prepare_nfs_guest_settings"
-        hook.after(
-          VagrantPlugins::ProviderVirtualBox::Action::Boot,
-          Action::PrepareNFSGuestSettings
+        require_relative "action/mount_nfs"
+        hook.before(
+          Vagrant::Action::Builtin::WaitForCommunicator,
+          Action::MountNFS
+        )
+        hook.before(
+          Vagrant::Action::Builtin::SyncedFolders,
+          Action::MountNFS
         )
       end
 
-      action_hook(:nfs_guest, :machine_action_reload) do |hook|
-        require_relative "action/prepare_nfs_guest_settings"
-        hook.before(
-          VagrantPlugins::ProviderVirtualBox::Action::PrepareNFSSettings,
-          Action::PrepareNFSGuestSettings
-        )
+      action_hook(:nfs_guest, :machine_action_suspend) do |hook|
+        require_relative "action/unmount_nfs"
+        hook.prepend(Action::UnmountNFS)
       end
 
       action_hook(:nfs_guest, :machine_action_resume) do |hook|
         require_relative "action/mount_nfs"
-        require_relative "action/prepare_nfs_guest_settings"
         hook.after(
-          VagrantPlugins::ProviderVirtualBox::Action::WaitForCommunicator,
-          Action::PrepareNFSGuestSettings
-        )
-        hook.after(
-          Action::PrepareNFSGuestSettings,
+          Vagrant::Action::Builtin::WaitForCommunicator,
           Action::MountNFS
         )
       end
@@ -79,17 +76,14 @@ module VagrantPlugins
 
       action_hook(:nfs_guest, :machine_action_reload) do |hook|
         require_relative "action/unmount_nfs"
+        require_relative "action/mount_nfs"
         hook.before(
           Vagrant::Action::Builtin::GracefulHalt,
           Action::UnmountNFS
         )
-      end
-
-      action_hook(:nfs_guest, :machine_action_package) do |hook|
-        require_relative "action/unmount_nfs"
         hook.before(
-          Vagrant::Action::Builtin::GracefulHalt,
-          Action::UnmountNFS
+          Vagrant::Action::Builtin::SyncedFolders,
+          Action::MountNFS
         )
       end
 
@@ -101,10 +95,10 @@ module VagrantPlugins
         )
       end
 
-      action_hook(:nfs_guest, :machine_action_suspend) do |hook|
+      action_hook(:nfs_guest, :machine_action_package) do |hook|
         require_relative "action/unmount_nfs"
         hook.before(
-          VagrantPlugins::ProviderVirtualBox::Action::Suspend,
+          Vagrant::Action::Builtin::GracefulHalt,
           Action::UnmountNFS
         )
       end
