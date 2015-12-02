@@ -6,6 +6,9 @@ module VagrantPlugins
         def self.nfs_settings(machine)
           adapter, host_ip = self.find_host_only_adapter(machine)
           machine_ip       = self.read_static_machine_ips(machine) || self.read_dynamic_machine_ip(machine, adapter)
+
+          raise Vagrant::Errors::NFSNoHostonlyNetwork if !host_ip || !machine_ip
+
           return host_ip, machine_ip
         end
 

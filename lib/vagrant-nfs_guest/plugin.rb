@@ -17,6 +17,8 @@ require_relative "guests/ubuntu/plugin"
 require_relative "hosts/bsd/plugin"
 require_relative "hosts/linux/plugin"
 require_relative "providers/virtualbox/plugin"
+require_relative "providers/parallels/plugin"
+require_relative "providers/docker/plugin"
 
 module VagrantPlugins
   module SyncedFolderNFSGuest
