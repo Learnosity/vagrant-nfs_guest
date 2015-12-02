@@ -2,14 +2,17 @@
 
 ## What's New?
 
-- Supports Vagrant > 1.6
-- Handles actions ```up```, ```halt```, ```destroy```, ```suspend```, ```resume``` and ```package``` properly
-- Uses retryable() for host to guest communications allow more fault tolerance
-- Better error messages and handling
-- Re-organisation of modules and class to better match Vagrant proper
-- Simplified the plugin events binding
-- Will install the NFS daemon on the guest if the guest capability is supported (Ubuntu and Debian only at this stage)
-- Supports BSD/OSX, and Linux based Hosts that support NFS mounting
+- NEW: added untested support for Parallels and Docker providers (Please raise any issues if they don't work!).
+- NEW: Redhat/CentOS guest support added.
+- FIXED: suspend and resume with 'up' instead of 'resume' fixed.
+- Supports Vagrant > 1.6.
+- Handles actions ```up```, ```halt```, ```destroy```, ```suspend```, ```resume``` and ```package``` properly.
+- Uses retryable() for host to guest communications allow more fault tolerance.
+- Better error messages and handling.
+- Re-organisation of modules and class to better match Vagrant proper.
+- Simplified the plugin events binding.
+- Will install the NFS daemon on the guest if the guest capability is supported (Ubuntu and Debian only at this stage).
+- Supports BSD/OSX, and Linux based Hosts that support NFS mounting.
 
 ## Overview
 
