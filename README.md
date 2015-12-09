@@ -61,13 +61,16 @@ We use 'chruby' to allow a virtual ruby environment for developement. The 'bundl
     bundle exec vagrant
 
 You can test your handy work using the ```example_box``` by doing the following:
+
     cd ./example_box/
     bundle exec vagrant up
 
 You can ssh into the test VM using:
+
     bundle exec vagrant ssh
 
 ... and you can clean up with:
+
     bundle exec vagrant destroy
 
     
