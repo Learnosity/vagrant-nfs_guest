@@ -2,7 +2,8 @@
 
 ## What's New?
 
-- NEW: added untested support for Parallels and Docker providers (Please raise any issues if they don't work!).
+- NEW: added untested support for Docker providers (Please raise any issues if they don't work!).
+- NEW: added Parallels provider support
 - NEW: Redhat/CentOS guest support added.
 - FIXED: suspend and resume with 'up' instead of 'resume' fixed.
 - Supports Vagrant > 1.6.
