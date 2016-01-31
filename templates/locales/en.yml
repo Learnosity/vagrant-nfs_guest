@@ -43,6 +43,16 @@ en:
 
         Stderr from the command:
         %{stderr}
+      nfs_create_mounts_failed: |-
+        Something failed while creating the NFS mounts on the guest.
+
+        %{command}
+
+        Stdout from the command:
+        %{stdout}
+
+        Stderr from the command:
+        %{stderr}
 
       nfs_server_missing: |-
         Guest is missing the required NFS server daemon.
