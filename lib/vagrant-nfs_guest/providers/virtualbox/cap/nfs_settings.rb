@@ -1,3 +1,5 @@
+require "vagrant/util/retryable"
+
 module VagrantPlugins
   module SyncedFolderNFSGuest
     module ProviderVirtualBox
