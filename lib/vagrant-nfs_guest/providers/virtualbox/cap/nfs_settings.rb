@@ -4,6 +4,7 @@ module VagrantPlugins
   module SyncedFolderNFSGuest
     module ProviderVirtualBox
       module Cap
+        extend Vagrant::Util::Retryable
 
         def self.nfs_settings(machine)
           adapter, host_ip = self.find_host_only_adapter(machine)
@@ -79,7 +80,7 @@ module VagrantPlugins
         end
 
         # Separating these out so we can stub out the sleep in tests
-        def retry_options
+        def self.retry_options
           {tries: 15, sleep: 1}
         end
       end
