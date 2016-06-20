@@ -36,6 +36,19 @@ module VagrantPlugins
               raise SyncedFolderNFSGuest::Errors::ProviderNFSSettingsCapMissing
             end
 
+            # grab the folders to check if any use nfs_guest and require host networking
+            folders = @machine.config.vm.synced_folders
+            nfs_guest = false
+            folders.each do |name, opts|
+              if opts[:type] == :nfs_guest
+                nfs_guest = true
+              end
+            end
+
+            if not nfs_guest
+              return
+            end
+
             # grab the ips from the provider
             host_ip, machine_ip = @machine.provider.capability(:nfs_settings)
 
@@ -50,8 +63,6 @@ module VagrantPlugins
                 if installed
                   # Mount guest NFS folders
                   @machine.ui.info(I18n.t("vagrant_nfs_guest.actions.vm.nfs.mounting"))
-                  folders = @machine.config.vm.synced_folders
-
                   @machine.env.host.capability(:nfs_mount, @machine.ui, @machine.id, machine_ip, folders)
                 end
               end
