@@ -34,8 +34,7 @@ module VagrantPlugins
         host_ip, machine_ip = machine.provider.capability(:nfs_settings)
         machine_ip = [machine_ip] if !machine_ip.is_a?(Array)
 
-        raise Vagrant::Errors::NFSNoHostIP if !host_ip
-        raise Vagrant::Errors::NFSNoGuestIP if !machine_ip
+        raise Vagrant::Errors::NFSNoHostonlyNetwork if !host_ip || !machine_ip
 
         if machine.config.nfs_guest.verify_installed
           if machine.guest.capability?(:nfs_server_installed)
