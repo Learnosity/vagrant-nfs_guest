@@ -19,6 +19,7 @@ require_relative "hosts/linux/plugin"
 require_relative "providers/virtualbox/plugin"
 require_relative "providers/parallels/plugin"
 require_relative "providers/docker/plugin"
+require_relative "providers/lxc/plugin"
 
 module VagrantPlugins
   module SyncedFolderNFSGuest
