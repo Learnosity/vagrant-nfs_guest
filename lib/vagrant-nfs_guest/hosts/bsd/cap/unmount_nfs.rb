@@ -16,8 +16,7 @@ module VagrantPlugins
 
               unmount_options = opts.fetch(:unmount_options, []).join(" ")
 
-              expanded_host_path = `printf #{opts[:hostpath]}`
-              umount_msg = `umount #{unmount_options} '#{expanded_host_path}' 2>&1`
+              umount_msg = `umount #{unmount_options} '#{opts[:hostpath]}' 2>&1`
 
               if $?.exitstatus != 0
                 if not umount_msg.include? 'not currently mounted'

@@ -42,6 +42,7 @@ module VagrantPlugins
             folders.each do |name, opts|
               if opts[:type] == :nfs_guest
                 nfs_guest = true
+                opts[:hostpath] = File.expand_path(opts[:hostpath], env[:root_path])
               end
             end
 
