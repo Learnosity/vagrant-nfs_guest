@@ -5,6 +5,7 @@
 - NEW: added untested support for Docker providers (Please raise any issues if they don't work!).
 - NEW: added Parallels provider support
 - NEW: Redhat/CentOS guest support added.
+- NEW: Now properly handles force halts
 - FIXED: suspend and resume with 'up' instead of 'resume' fixed.
 - Supports Vagrant > 1.6.
 - Handles actions ```up```, ```halt```, ```destroy```, ```suspend```, ```resume``` and ```package``` properly.
@@ -28,8 +29,9 @@ Guest VMs we've tested include:
 - other Linux based guests may work fine with the generic Linux support. But no guarantee
 
 Hosts we've tested include:
-- OSX (Mavericks, Yosemite, El Capitan)
+- OSX (Mavericks, Yosemite, El Capitan, Siera)
 - Ubuntu (precise, trusty)
+- CentOS (6, 7)
 - other Linux based OSs should work fine, but will need testing, again no guarantee
 
 We're happy to receive pull-request to support alternatives hosts and guests. To implement this support it's relatively trivial if you look in ./lib/hosts and ./lib/guests.
