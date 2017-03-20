@@ -41,7 +41,7 @@ module VagrantPlugins
             nfs_guest = false
             nfs_guest_folders = {}
             folders.each do |name, opts|
-              if opts[:type] == :nfs_guest
+              if opts[:type] == :nfs_guest && opts[:disabled] == false
                 nfs_guest = true
                 opts[:hostpath] = File.expand_path(opts[:hostpath], env[:root_path])
                 nfs_guest_folders[name] = opts.dup
