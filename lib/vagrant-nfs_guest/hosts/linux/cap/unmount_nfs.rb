@@ -6,10 +6,6 @@ module VagrantPlugins
 
           def self.nfs_unmount(environment, ui, folders)
             folders.each do |name, opts|
-              if opts[:type] != :nfs_guest
-                next
-              end
-
               ui.detail(I18n.t("vagrant.actions.vm.share_folders.mounting_entry",
                                guestpath: opts[:guestpath],
                                hostpath: opts[:hostpath]))

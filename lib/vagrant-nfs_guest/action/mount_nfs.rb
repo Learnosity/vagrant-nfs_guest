@@ -39,10 +39,12 @@ module VagrantPlugins
             # grab the folders to check if any use nfs_guest and require host networking
             folders = @machine.config.vm.synced_folders
             nfs_guest = false
+            nfs_guest_folders = {}
             folders.each do |name, opts|
-              if opts[:type] == :nfs_guest
+              if opts[:type] == :nfs_guest && opts[:disabled] == false
                 nfs_guest = true
                 opts[:hostpath] = File.expand_path(opts[:hostpath], env[:root_path])
+                nfs_guest_folders[name] = opts.dup
               end
             end
 
@@ -64,7 +66,7 @@ module VagrantPlugins
                 if installed
                   # Mount guest NFS folders
                   @machine.ui.info(I18n.t("vagrant_nfs_guest.actions.vm.nfs.mounting"))
-                  @machine.env.host.capability(:nfs_mount, @machine.ui, @machine.id, machine_ip, folders)
+                  @machine.env.host.capability(:nfs_mount, @machine.ui, @machine.id, machine_ip, nfs_guest_folders)
                 end
               end
             end
