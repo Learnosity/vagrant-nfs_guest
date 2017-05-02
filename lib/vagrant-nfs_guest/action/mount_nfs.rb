@@ -38,8 +38,10 @@ module VagrantPlugins
 
             # grab the folders to check if any use nfs_guest and require host networking
             folders = @machine.config.vm.synced_folders
+
             nfs_guest = false
             nfs_guest_folders = {}
+
             folders.each do |name, opts|
               if opts[:type] == :nfs_guest && opts[:disabled] == false
                 nfs_guest = true
