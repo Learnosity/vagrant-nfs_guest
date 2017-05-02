@@ -2,10 +2,13 @@
 
 ## What's New?
 
-- NEW: added untested support for Docker providers (Please raise any issues if they don't work!).
-- NEW: added Parallels provider support
-- NEW: Redhat/CentOS guest support added.
-- NEW: Now properly handles force halts
+- NEW: moved to version v1.0.0 as it's no longer a "beta" plugin, it's been well used and tested. So figured now is a good time.
+- NEW: `disabled` flag on shares now are properly respected
+- UPDATED: share directories on guest are no longer recursively `chown`.
+- Added untested support for Docker providers (Please raise any issues if they don't work!).
+- Added Parallels provider support
+- Redhat/CentOS guest support added.
+- Now properly handles force halts.
 - FIXED: suspend and resume with 'up' instead of 'resume' fixed.
 - Supports Vagrant > 1.6.
 - Handles actions ```up```, ```halt```, ```destroy```, ```suspend```, ```resume``` and ```package``` properly.

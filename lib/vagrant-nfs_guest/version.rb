@@ -1,5 +1,5 @@
 module VagrantPlugins
   module SyncedFolderNFSGuest
-    VERSION = "0.1.11"
+    VERSION = "1.0.0"
   end
 end
