@@ -56,14 +56,16 @@ module VagrantPlugins
             machine.guest.capability(:nfs_check_command)
           end
 
-          def self.nfs_export(machine, ip, folders)
+          def self.nfs_export(machine, ips, folders)
             if !nfs_capable?(machine)
                 raise Errors::NFSServerMissing
             end
 
             if machine.guest.capability?(:nfs_setup_firewall)
               machine.ui.info I18n.t("vagrant_nfs_guest.guests.linux.nfs_setup_firewall")
-              machine.guest.capability(:nfs_setup_firewall, ip)
+              ips.each do |ip|
+                machine.guest.capability(:nfs_setup_firewall, ip)
+              end
             end
 
             nfs_exports_template = machine.guest.capability(:nfs_exports_template)
@@ -73,7 +75,7 @@ module VagrantPlugins
             output = Vagrant::Util::TemplateRenderer.render(
               nfs_exports_template,
               uuid: machine.id,
-              ips: [ip],
+              ips: ips,
               folders: folders,
               user: Process.uid)
 
