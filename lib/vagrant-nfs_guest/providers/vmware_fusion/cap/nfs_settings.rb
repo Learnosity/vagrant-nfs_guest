@@ -5,7 +5,7 @@ module VagrantPlugins
         def self.read_host_ip
           # In practice, we need the host's IP on the vmnet device this VM uses.
           # It seems a bit tricky to get the right one, so let's allow all.
-          return `ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{ print $2; }'`.split("\n")
+          return `for N in $(ifconfig | awk -F: '/vmnet/ { print $1; }'); do ifconfig $N | awk '/inet / { print $2; }'; done`.split("\n")
         end
 
         def self.nfs_settings(machine)
