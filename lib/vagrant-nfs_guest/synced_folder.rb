@@ -59,7 +59,7 @@ module VagrantPlugins
         end
 
         machine.ui.info I18n.t("vagrant_nfs_guest.actions.vm.nfs.exporting")
-        machine.guest.capability(:nfs_export, host_ip, mount_folders)
+        machine.guest.capability(:nfs_export, Array(host_ip), mount_folders)
       end
 
       protected

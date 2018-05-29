@@ -5,6 +5,7 @@
 - NEW: moved to version v1.0.0 as it's no longer a "beta" plugin, it's been well used and tested. So figured now is a good time.
 - NEW: `disabled` flag on shares now are properly respected
 - UPDATED: share directories on guest are no longer recursively `chown`.
+- NEW: Added VMware Fusion provider support.
 - Added untested support for Docker providers (Please raise any issues if they don't work!).
 - Added Parallels provider support
 - Redhat/CentOS guest support added.
