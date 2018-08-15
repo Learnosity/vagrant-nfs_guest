@@ -7,8 +7,8 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "ubuntu/trusty64"           # ubuntu
-  #config.vm.box = "centos/7"                 # centos/7
+  #config.vm.box = "ubuntu/trusty64"           # ubuntu
+  config.vm.box = "centos/7"                 # centos/7
   #config.vm.box = "nrel/CentOS-6.5-x86_64"   # centos/6.5
 
   # Create a private network, which allows host-only access to the machine
