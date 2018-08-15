@@ -8,6 +8,14 @@ module VagrantPlugins
             machine.communicate.test("test $(ps -o comm= 1) == 'systemd'")
           end
 
+          def self.firewalld?(machine)
+            machine.communicate.test("test $(command -v firewall-cmd)")
+          end
+
+          def self.firewalld_enabled?(machine)
+            machine.communicate.test("test $(firewall-cmd --state) == 'running'")
+          end
+
           def self.nfs_server_install(machine)
             machine.communicate.sudo("yum -y install nfs-utils nfs-utils-lib")
 
@@ -38,6 +46,19 @@ module VagrantPlugins
               )
 
               nfs_start_command(machine)
+            end
+
+            puts("*******************************")
+            puts(firewalld?(machine))
+            puts(firewalld_enabled?(machine))
+            puts("*******************************")
+
+            if firewalld?(machine) #and firewalld_enabled?(machine)
+              # add nfs rules if we have firewalld and it's enabled
+              machine.communicate.sudo("firewall-cmd --permanent --add-service=nfs")
+              machine.communicate.sudo("firewall-cmd --permanent --add-service=mountd")
+              machine.communicate.sudo("firewall-cmd --permanent --add-service=rpc-bind")
+              machine.communicate.sudo("firewall-cmd --reload")
             end
           end
 
