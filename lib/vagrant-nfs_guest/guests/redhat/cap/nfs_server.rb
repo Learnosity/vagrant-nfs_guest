@@ -48,11 +48,6 @@ module VagrantPlugins
               nfs_start_command(machine)
             end
 
-            puts("*******************************")
-            puts(firewalld?(machine))
-            puts(firewalld_enabled?(machine))
-            puts("*******************************")
-
             if firewalld?(machine) #and firewalld_enabled?(machine)
               # add nfs rules if we have firewalld and it's enabled
               machine.communicate.sudo("firewall-cmd --permanent --add-service=nfs")
