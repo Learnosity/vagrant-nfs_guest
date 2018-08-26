@@ -15,7 +15,7 @@ module VagrantPlugins
               umount_msg = `umount #{unmount_options} '#{opts[:hostpath]}' 2>&1`
 
               if $?.exitstatus != 0
-                if not umount_msg.include? 'not currently mounted'
+                unless /not (currently )?mounted/ =~ umount_msg
                   ui.info "NFS mounts still in use!"
                   exit(1)
                 end
