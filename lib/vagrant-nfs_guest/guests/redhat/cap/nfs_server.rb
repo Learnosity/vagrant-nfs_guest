@@ -17,7 +17,7 @@ module VagrantPlugins
           end
 
           def self.nfs_server_install(machine)
-            machine.communicate.sudo("yum -y install nfs-utils nfs-utils-lib")
+            machine.communicate.sudo("yum -y install nfs-utils")
 
             if systemd?(machine)
               machine.communicate.sudo("systemctl enable rpcbind nfs-server")
