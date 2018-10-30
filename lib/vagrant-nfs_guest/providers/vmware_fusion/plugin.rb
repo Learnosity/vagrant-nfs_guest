@@ -10,6 +10,10 @@ module VagrantPlugins
         require_relative "cap/nfs_settings"
         ProviderVMwareFusion::Cap
       end
+      provider_capability(:vmware_desktop, :nfs_settings) do
+        require_relative "cap/nfs_settings"
+        ProviderVMwareFusion::Cap
+      end
     end
   end
 end
