@@ -29,6 +29,7 @@ PATH
   remote: .
   specs:
     vagrant-nfs_guest (1.0.4)
+      bundler (>= 2.2.10)
 
 GEM
   remote: https://rubygems.org/
@@ -100,11 +101,11 @@ GEM
       winrm (~> 2.0)
 
 PLATFORMS
-  ruby
+  x86_64-darwin-20
 
 DEPENDENCIES
   vagrant!
   vagrant-nfs_guest!
 
 BUNDLED WITH
-   1.17.2
+   2.2.26
