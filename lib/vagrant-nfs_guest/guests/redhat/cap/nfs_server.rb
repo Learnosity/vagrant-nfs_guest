@@ -16,8 +16,16 @@ module VagrantPlugins
             machine.communicate.test("test $(firewall-cmd --state) == 'running'")
           end
 
+          def self.dnf?(machine)
+            machine.communicate.test("test $(command -v dnf)")
+          end
+
           def self.nfs_server_install(machine)
-            machine.communicate.sudo("dnf -y install nfs-utils")
+            if dnf?(machine)
+              machine.communicate.sudo("dnf -y install nfs-utils")
+            else
+              machine.communicate.sudo("yum -y install nfs-utils")
+            end
 
             if systemd?(machine)
               machine.communicate.sudo("systemctl enable rpcbind nfs-server")

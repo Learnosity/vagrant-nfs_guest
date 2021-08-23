@@ -1,0 +1,110 @@
+GIT
+  remote: https://github.com/mitchellh/vagrant.git
+  revision: 52857ccac9d315a6e1897c7885f463983ac67957
+  tag: v2.2.18
+  specs:
+    vagrant (2.2.18)
+      bcrypt_pbkdf (~> 1.1)
+      childprocess (~> 4.1.0)
+      ed25519 (~> 1.2.4)
+      erubi
+      hashicorp-checkpoint (~> 0.1.5)
+      i18n (~> 1.8)
+      listen (~> 3.5)
+      log4r (~> 1.1.9, < 1.1.11)
+      mime-types (~> 3.3)
+      net-scp (~> 3.0.0)
+      net-sftp (~> 3.0)
+      net-ssh (>= 6.1.0, < 6.2)
+      rb-kqueue (~> 0.2.0)
+      rexml (~> 3.2)
+      rubyzip (~> 2.0)
+      vagrant_cloud (~> 3.0.5)
+      wdm (~> 0.1.0)
+      winrm (>= 2.3.4, < 3.0)
+      winrm-elevated (>= 1.2.1, < 2.0)
+      winrm-fs (>= 1.3.4, < 2.0)
+
+PATH
+  remote: .
+  specs:
+    vagrant-nfs_guest (1.0.4)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    bcrypt_pbkdf (1.1.0)
+    builder (3.2.4)
+    childprocess (4.1.0)
+    concurrent-ruby (1.1.9)
+    ed25519 (1.2.4)
+    erubi (1.10.0)
+    excon (0.85.0)
+    ffi (1.15.3)
+    gssapi (1.3.1)
+      ffi (>= 1.0.1)
+    gyoku (1.3.1)
+      builder (>= 2.1.2)
+    hashicorp-checkpoint (0.1.5)
+    httpclient (2.8.3)
+    i18n (1.8.10)
+      concurrent-ruby (~> 1.0)
+    listen (3.7.0)
+      rb-fsevent (~> 0.10, >= 0.10.3)
+      rb-inotify (~> 0.9, >= 0.9.10)
+    little-plugger (1.1.4)
+    log4r (1.1.10)
+    logging (2.3.0)
+      little-plugger (~> 1.1)
+      multi_json (~> 1.14)
+    mime-types (3.3.1)
+      mime-types-data (~> 3.2015)
+    mime-types-data (3.2021.0704)
+    multi_json (1.15.0)
+    net-scp (3.0.0)
+      net-ssh (>= 2.6.5, < 7.0.0)
+    net-sftp (3.0.0)
+      net-ssh (>= 5.0.0, < 7.0.0)
+    net-ssh (6.1.0)
+    nori (2.6.0)
+    rb-fsevent (0.11.0)
+    rb-inotify (0.10.1)
+      ffi (~> 1.0)
+    rb-kqueue (0.2.6)
+      ffi (>= 0.5.0)
+    rexml (3.2.5)
+    rubyntlm (0.6.3)
+    rubyzip (2.3.2)
+    vagrant_cloud (3.0.5)
+      excon (~> 0.73)
+      log4r (~> 1.1.10)
+      rexml (~> 3.2.5)
+    wdm (0.1.1)
+    winrm (2.3.6)
+      builder (>= 2.1.2)
+      erubi (~> 1.8)
+      gssapi (~> 1.2)
+      gyoku (~> 1.0)
+      httpclient (~> 2.2, >= 2.2.0.2)
+      logging (>= 1.6.1, < 3.0)
+      nori (~> 2.0)
+      rubyntlm (~> 0.6.0, >= 0.6.3)
+    winrm-elevated (1.2.3)
+      erubi (~> 1.8)
+      winrm (~> 2.0)
+      winrm-fs (~> 1.0)
+    winrm-fs (1.3.5)
+      erubi (~> 1.8)
+      logging (>= 1.6.1, < 3.0)
+      rubyzip (~> 2.0)
+      winrm (~> 2.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  vagrant!
+  vagrant-nfs_guest!
+
+BUNDLED WITH
+   1.17.2
